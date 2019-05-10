@@ -1,0 +1,21 @@
+.account-login {
+
+  &__title {
+    font-size: 18px;
+  }
+
+  &__element {
+    margin-top: 14px;
+  }
+
+  .forgot {
+    font-weight: bold;
+    font-size: 14px;
+  }
+
+  .sign-up-link {
+    span {
+      font-weight: bold;
+    }
+  }
+}

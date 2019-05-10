@@ -1,0 +1,16 @@
+.account-registration {
+
+  &__title {
+    font-size: 18px;
+  }
+
+  &__element {
+    margin-top: 14px;
+  }
+
+  .login-link {
+    span {
+      font-weight: bold;
+    }
+  }
+}

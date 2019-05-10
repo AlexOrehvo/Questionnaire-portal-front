@@ -1,0 +1,14 @@
+.add-edit-form {
+  padding: 0 30px;
+  text-align: center;
+
+  &__element {
+    align-items: center;
+    margin-top: 7px;
+  }
+
+  .checkboxes {
+    display: flex;
+    justify-content: space-between;
+  }
+}

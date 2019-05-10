@@ -1,0 +1,43 @@
+.fields-list {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #f1f1f1;
+}
+
+.fields-list-header {
+  width: 100%;
+  display: flex;
+  padding: 10px;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid #f1f1f1;
+
+  &__title {
+    font-size: 18px;
+  }
+
+  &__button {
+    text-transform: uppercase;
+  }
+}
+
+.fields-list-table {
+  padding: 10px;
+
+  .table-buttons {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    padding-right: 10px;
+    i {
+      margin: 0 5px;
+    }
+  }
+}
+
+.fields-list-pagination {
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
