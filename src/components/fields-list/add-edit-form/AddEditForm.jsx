@@ -21,7 +21,7 @@ class AddEditForm extends Component {
                 label: this.props.field.label,
                 type: this.props.field.type,
                 required: this.props.field.required,
-                isActive: this.props.field.isActive,
+                active: this.props.field.active,
                 options: this.props.field.options
             },
             selectedOptions: [
@@ -212,10 +212,10 @@ class AddEditForm extends Component {
                                         label="Required"
                                     />
                                     <FormControlCheckbox
-                                        id="isActive"
-                                        name="isActive"
-                                        defaultChecked={this.state.field.isActive}
-                                        handleChange={this.handleChangeChecked('isActive')}
+                                        id="active"
+                                        name="active"
+                                        defaultChecked={this.state.field.active}
+                                        handleChange={this.handleChangeChecked('active')}
                                         label="Is active"
                                     />
                                 </div>

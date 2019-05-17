@@ -20,6 +20,7 @@ class FieldService {
     }
 
     save(field) {
+        console.log(field);
         const headers = AccountService.getToken().type + ' ' + AccountService.getToken().token;
         return axios.post(api.BASE_URL + api.FIELDS_END_POINT, field, {
             headers: {

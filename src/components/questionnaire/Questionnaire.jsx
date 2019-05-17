@@ -57,6 +57,7 @@ class Questionnaire extends Component {
         if (this.isValidForm()) {
             ResponseService.send(this.state.response);
         }
+        console.log(this.state);
     }
 
     callback = function (message) {
@@ -68,13 +69,13 @@ class Questionnaire extends Component {
 
     isValidForm() {
         let isValid = true;
+        this.setState({error: ''});
         this.state.fields.forEach(field => {
             if (!(!field.required || this.state.response.map[field.id])) {
                 this.setState({error: 'Required fields can not be empty'});
                 isValid = false;
             }
         });
-        this.setState({error: ''});
         return isValid;
     }
 
@@ -83,7 +84,8 @@ class Questionnaire extends Component {
             <div className="questionnaire">
                 <form className="form-group">
                     {
-                        this.state.fields.map(field =>
+                         this.state.fields.map(field =>
+                             field.active &&
                             <div key={field.id}>
                                 {
                                     field.type === 'SINGLE_LINE_TEXT' &&

@@ -76,7 +76,7 @@ class Login extends Component {
                .then(res => {
                    AccountService.saveToken(res.data.accessToken,res.data.tokenType);
                    ResponseService.connect();
-                   this.props.history.push('/fields');
+                   this.props.history.push('/fields/');
                });
        }
     }

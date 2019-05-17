@@ -14,7 +14,7 @@ class FieldsList extends Component {
             label: '',
             type: 'SINGLE_LINE_TEXT',
             required: false,
-            isActive: false,
+            active: false,
             options: []
         };
         this.state = {
@@ -136,7 +136,7 @@ class FieldsList extends Component {
                                     <td>{field.label}</td>
                                     <td>{field.type}</td>
                                     <td>{Boolean(field.required).toString()}</td>
-                                    <td>{Boolean(field.isActive).toString()}</td>
+                                    <td>{Boolean(field.active).toString()}</td>
                                     <td className="table-buttons">
                                         <AddEditForm field={field}
                                                      onSaveField={this.onSaveField}
