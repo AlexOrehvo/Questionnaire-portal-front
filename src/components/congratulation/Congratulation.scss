@@ -1,0 +1,18 @@
+.congratulation {
+  width: 350px;
+  background: #fff;
+  border: 1px solid #f1f1f1;
+  padding: 20px;
+
+  &__thank {
+    text-align: center;
+    font-size: 22px;
+    margin: 0;
+  }
+
+  &__message {
+    margin: 0;
+    text-align: center;
+    font-size: 18px;
+  }
+}

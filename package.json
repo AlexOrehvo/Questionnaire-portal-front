@@ -6,13 +6,17 @@
     "axios": "^0.18.0",
     "bootstrap": "^4.3.1",
     "font-awesome": "^4.7.0",
+    "is_js": "^0.9.0",
     "jquery": "^3.4.1",
     "node-sass": "^4.12.0",
     "react": "^16.8.6",
     "react-bootstrap": "^1.0.0-beta.8",
     "react-dom": "^16.8.6",
     "react-router-dom": "latest",
-    "react-scripts": "3.0.0"
+    "react-scripts": "3.0.0",
+    "sockjs": "^0.3.19",
+    "sockjs-client": "^1.3.0",
+    "stompjs": "^2.3.3"
   },
   "scripts": {
     "start": "react-scripts start",

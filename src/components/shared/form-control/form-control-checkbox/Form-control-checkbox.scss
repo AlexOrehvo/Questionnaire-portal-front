@@ -1,8 +1,14 @@
 .form-control-checkbox {
   display: flex;
+  align-items: center;
+
+  input {
+    margin-top: 7px;
+  }
 
   label {
     font-weight: normal;
-    margin-left: 5px;
+    margin-left: 3px;
+    font-size: 14px;
   }
 }

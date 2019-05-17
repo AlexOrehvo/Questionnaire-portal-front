@@ -3,6 +3,10 @@ import Button from 'react-bootstrap/Button';
 import Modal from 'react-bootstrap/Modal';
 
 import FieldService from "../../../services/FieldService";
+import FormControlSelect from "../../shared/form-control/form-control-select/Form-control-select";
+import FormControlTextarea from "../../shared/form-control/form-control-textarea/Form-control-textarea";
+import FormControlInput from "../../shared/form-control/form-control-input/Form-control-input";
+import FormControlCheckbox from "../../shared/form-control/form-control-checkbox/Form-control-checkbox";
 
 import './AddEditForm.scss';
 
@@ -17,13 +21,28 @@ class AddEditForm extends Component {
                 label: this.props.field.label,
                 type: this.props.field.type,
                 required: this.props.field.required,
-                isActive: this.props.field.isActive
-            }
-        };
+                isActive: this.props.field.isActive,
+                options: this.props.field.options
+            },
+            selectedOptions: [
+                {value: 'SINGLE_LINE_TEXT', text: 'Single line text'},
+                {value: 'MULTI_LINE_TEXT', text: 'Multi line text'},
+                {value: 'RADIO_BUTTON', text: 'Radio button'},
+                {value: 'CHECKBOX', text: 'Checkbox'},
+                {value: 'COMBOBOX', text: 'Combobox'},
+                {value: 'DATE', text: 'Date'}
+            ],
+            labelError: '',
+            optionsError: ''
+        }
+        ;
 
         this.handleShow = this.handleShow.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.handleSave = this.handleSave.bind(this);
+        this.isValidForm = this.isValidForm.bind(this);
+        this.isValidLabel = this.isValidLabel.bind(this);
+        this.isValidOptions = this.isValidOptions.bind(this);
     }
 
     handleClose() {
@@ -35,54 +54,77 @@ class AddEditForm extends Component {
     }
 
     handleSave() {
-        if (this.state.field.id == null) {
-            FieldService.save(this.state.field).then(
-                response => {
-                    this.props.onSaveField();
-                }
-            );
-        } else {
-            FieldService.update(this.state.field).then(
-                response => {
-                    this.props.onSaveField();
-                }
-            );
+       if (this.isValidForm()) {
+           if (this.state.field.id == null) {
+               FieldService.save(this.state.field).then(
+                   response => {
+                       this.props.onSaveField();
+                   }
+               );
+           } else {
+               FieldService.update(this.state.field).then(
+                   response => {
+                       this.props.onSaveField();
+                   }
+               );
+           }
+           this.setState({ show: false});
+       }
+    }
+
+    isValidForm() {
+        return this.isValidLabel(this.state.field.label) && this.isValidOptions(this.state.field.options);
+    }
+
+    isValidLabel(label) {
+        if(label.length === 0) {
+            this.setState({labelError: 'This field is required'});
+            return false;
         }
-        this.setState({ show: false});
+
+        this.setState({labelError: ''});
+        return true;
     }
 
-    handleChangeLabel(event) {
+    isValidOptions(options) {
+        if ((this.state.field.type === 'RADIO_BUTTON'
+            || this.state.field.type === 'CHECKBOX'
+            || this.state.field.type === 'COMBOBOX')) {
+
+            if(options.length === 0) {
+                this.setState({optionsError: 'This field is required'});
+                return false;
+            }
+        }
+
+
+        this.setState({optionsError: ''});
+        return true;
+    }
+
+    handleChange = name => event => {
         this.setState({
             field: {
                 ...this.state.field,
-                label: event.target.value
+                [name]: event.target.value
             }
         });
-    }
+    };
 
-    handleChangeType(event) {
+    handleChangeChecked = name => event => {
         this.setState({
             field: {
                 ...this.state.field,
-                type: event.target.value
+                [name]: event.target.checked
             }
         });
-    }
+    };
 
-    handleChangeRequired(event) {
+    handleChangeOptions(event) {
         this.setState({
             field: {
                 ...this.state.field,
-                required: event.target.checked
-            }
-        });
-    }
-
-    handleChangeIsActive(event) {
-        this.setState({
-            field: {
-                ...this.state.field,
-                isActive: event.target.checked
+                options: event.target.value.split('\n')
             }
         });
     }
@@ -92,7 +134,12 @@ class AddEditForm extends Component {
             <>
                 {
                     this.props.field.id == null?
-                        <Button variant="primary" onClick={this.handleShow}>Add button</Button>:
+                        <button
+                            className="btn btn-primary add-button"
+                            type="button" onClick={this.handleShow}>
+                            <span className="plus">+</span>
+                            Add button
+                        </button>:
                         <i className="fa fa-edit" onClick={this.handleShow}></i>
                 }
 
@@ -107,12 +154,13 @@ class AddEditForm extends Component {
                                     <label htmlFor="label">Label*</label>
                                 </div>
                                 <div className="col-md-6 text-left">
-                                    <input className="form-control"
-                                           type="text"
-                                           id="label"
-                                           name="label"
-                                           onChange={this.handleChangeLabel.bind(this)}
-                                           defaultValue={this.state.field.label}
+                                    <FormControlInput
+                                        type="text"
+                                        id="label"
+                                        name="label"
+                                        handleChange={this.handleChange('label')}
+                                        defaultValue={this.state.field.label}
+                                        error={this.state.labelError}
                                     />
                                 </div>
                             </div>
@@ -122,48 +170,54 @@ class AddEditForm extends Component {
                                     <label htmlFor="type">Type*</label>
                                 </div>
                                 <div className="col-md-6 text-left">
-                                    <select className="form-control"
-                                            id="type"
-                                            name="type"
-                                            onChange={this.handleChangeType.bind(this)}
-                                            defaultValue={this.state.field.type}
-                                    >
-                                        <option value="SINGLE_LINE_TEXT">Single line text</option>
-                                        <option value="MULTI_LINE_TEXT">Multiline text</option>
-                                        <option value="RADIO_BUTTON">Radio button</option>
-                                        <option value="CHECKBOX">Checkbox</option>
-                                        <option value="COMBOBOX">Combobox</option>
-                                        <option value="DATE">Date</option>
-                                    </select>
+                                    <FormControlSelect
+                                        name="type"
+                                        id="type"
+                                        options={this.state.selectedOptions}
+                                        defaultValue={this.state.field.type?this.state.field.type
+                                            :this.state.selectedOptions[0]}
+                                        handleChange={this.handleChange('type')}
+                                    />
                                 </div>
                             </div>
 
+                            {(this.state.field.type === 'RADIO_BUTTON'
+                                || this.state.field.type === 'CHECKBOX'
+                                || this.state.field.type === 'COMBOBOX') &&
+                            <div className="row add-edit-form__element">
+                                <div className="col-md-3 text-right">
+                                    <label htmlFor="type">Options*</label>
+                                </div>
+                                <div className="col-md-6 text-left">
+                                    <FormControlTextarea
+                                        id="options"
+                                        name="options"
+                                        rows={6}
+                                        defaultValue={this.state.field.options.join('\n')}
+                                        handleChange={this.handleChangeOptions.bind(this)}
+                                        error={this.state.optionsError}
+                                    />
+                                </div>
+                            </div>
+                            }
+
+
                             <div className="row add-edit-form__element">
                                 <div className="col-md-6 offset-md-3 checkboxes">
-                                    <div className="form-check">
-                                        <input className="form-check-input"
-                                               type="checkbox"
-                                               id="required"
-                                               name="required"
-                                               onClick={this.handleChangeRequired.bind(this)}
-                                               defaultChecked={this.state.field.required}
-                                        />
-                                        <label className="form-check-label" htmlFor="required">
-                                            Required
-                                        </label>
-                                    </div>
-                                    <div className="form-check">
-                                        <input className="form-check-input"
-                                               type="checkbox"
-                                               id="isActive"
-                                               name="isActive"
-                                               onClick={this.handleChangeIsActive.bind(this)}
-                                               defaultChecked={this.state.field.isActive}
-                                        />
-                                        <label className="form-check-label" htmlFor="isActive">
-                                            Is Active
-                                        </label>
-                                    </div>
+                                    <FormControlCheckbox
+                                        id="required"
+                                        name="required"
+                                        defaultChecked={this.state.field.required}
+                                        handleChange={this.handleChangeChecked('required')}
+                                        label="Required"
+                                    />
+                                    <FormControlCheckbox
+                                        id="isActive"
+                                        name="isActive"
+                                        defaultChecked={this.state.field.isActive}
+                                        handleChange={this.handleChangeChecked('isActive')}
+                                        label="Is active"
+                                    />
                                 </div>
                             </div>
                         </form>

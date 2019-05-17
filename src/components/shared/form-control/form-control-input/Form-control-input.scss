@@ -6,7 +6,9 @@
     color: #c1c1c1;
   }
 
-  input {
-    width: 100%;
+  &__error {
+    font-size: 14px;
+    color: red;
+    font-weight: 600;
   }
 }

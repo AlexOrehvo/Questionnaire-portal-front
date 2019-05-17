@@ -10,6 +10,13 @@ class FieldsList extends Component {
 
     constructor(props) {
         super(props);
+        this.defaultField = {
+            label: '',
+            type: 'SINGLE_LINE_TEXT',
+            required: false,
+            isActive: false,
+            options: []
+        };
         this.state = {
             fields: [],
             showedFields: [],
@@ -77,9 +84,19 @@ class FieldsList extends Component {
                 active: activeToggle,
                 showedFields: showedFields
             });
-            console.log(this.state.showedFields);
 
         }
+    }
+
+    handleChangeItemsPerPage(event) {
+        const itemsPerPage = event.target.value;
+        const start = (this.state.active - 1) * itemsPerPage;
+        const end = this.state.active * itemsPerPage;
+        const showedFields = this.state.fields.slice(start, end);
+        this.setState({
+            itemsPerPage: itemsPerPage,
+            showedFields: showedFields
+        })
     }
 
     render() {
@@ -97,7 +114,7 @@ class FieldsList extends Component {
                     <span className="fields-list-header__title">
                         Fields
                     </span>
-                    <AddEditForm field={{label: "", type: "", required: false, isActive: false}}
+                    <AddEditForm field={this.defaultField}
                                  onSaveField={this.onSaveField}
                     />
                 </div>
@@ -143,7 +160,14 @@ class FieldsList extends Component {
                         {this.state.fields.length}
                     </p>
                     <Pagination>{this.state.paginationToggleValues}</Pagination>
-                    <p>123</p>
+                    <input
+                        className="toggleItemsPerPage form-control"
+                        type="number"
+                        min="1"
+                        max="10"
+                        defaultValue={this.state.itemsPerPage}
+                        onChange={this.handleChangeItemsPerPage.bind(this)}
+                    />
                 </div>
             </div>
         )

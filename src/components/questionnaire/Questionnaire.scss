@@ -1,0 +1,21 @@
+.questionnaire {
+  width: 350px;
+  padding: 14px;
+  background: #fff;
+  border: 1px solid #f1f1f1;
+
+  &__element {
+    margin-top: 10px;
+
+    p {
+      color: #c1c1c1;
+    }
+  }
+
+  &__error {
+    font-weight: 600;
+    font-size: 14px;
+    color: red;
+    margin: 0;
+  }
+}

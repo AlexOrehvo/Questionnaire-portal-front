@@ -1,0 +1,27 @@
+.responses-list {
+  width: 100%;
+  background: #fff;
+  border: 1px solid #f1f1f1;
+}
+
+.responses-list-header {
+  width: 100%;
+  padding: 10px;
+  border-bottom: 1px solid #f1f1f1;
+  font-size: 18px;
+}
+
+.responses-list-table {
+  padding: 10px;
+}
+
+.responses-list-pagination {
+  padding: 0 10px;
+  display: flex;
+  justify-content: space-between;
+
+  .toggleItemsPerPage {
+    width: 60px;
+    height: 30px;
+  }
+}

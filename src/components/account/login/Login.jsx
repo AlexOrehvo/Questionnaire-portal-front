@@ -1,42 +1,84 @@
 import React, {Component} from 'react';
 import { Link } from 'react-router-dom'
+import is from 'is_js';
 
 import AccountService from './../../../services/AccountService';
+import FormControlInput from './../../shared/form-control/form-control-input/Form-control-input';
+import FormControlCheckbox from './../../shared/form-control/form-control-checkbox/Form-control-checkbox';
 
 import './Login.scss';
+import ResponseService from "../../../services/ResponseService";
 
 class Login extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            email: '',
-            password: '',
-            rememberMe: false
+            login: {
+                email: '',
+                password: '',
+                rememberMe: false
+            },
+            emailError: '',
+            passwordError: ''
         };
-        this.handleEmailChange = this.handleEmailChange.bind(this);
-        this.handlePasswordChange = this.handlePasswordChange.bind(this);
         this.handleRememberMeChange = this.handleRememberMeChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
+        this.isValidEmail = this.isValidEmail.bind(this);
+        this.isValidPassword = this.isValidPassword.bind(this);
     }
 
-    handleEmailChange(event) {
-        this.setState({email: event.target.value});
-    }
-
-    handlePasswordChange(event) {
-        this.setState({password: event.target.value});
-    }
+    handleChange = name => event => {
+        this.setState({
+            login: {
+                ...this.state.login,
+                [name]: event.target.value
+            }
+        })
+    };
 
     handleRememberMeChange(event) {
-        this.setState({rememberMe: event.target.checked});
+        this.setState({
+            login: {
+                ...this.state.login,
+                rememberMe: event.target.checked
+            }
+        });
+    }
+
+    isValidEmail(email) {
+        if (!is.email(email)) {
+            this.setState({emailError: 'Invalid email format'});
+            return false;
+        }
+        this.setState({emailError: ''});
+        return true;
+    }
+
+    isValidPassword(password) {
+        if (password.length < 4 || password.length > 100) {
+            this.setState({passwordError: 'Password length must be from 4 to 100 characters'});
+            return false;
+        }
+
+        this.setState({passwordError: ''});
+        return true;
+    }
+
+    isValidForm() {
+        return this.isValidEmail(this.state.login.email) && this.isValidPassword(this.state.login.password);
     }
 
     handleSubmit(event) {
-        event.preventDefault();
-        console.log(this.state);
-        AccountService.auth(this.state)
-            .then(res => AccountService.saveToken(res.data.accessToken,res.data.tokenType));
+       if (this.isValidForm()) {
+           event.preventDefault();
+           AccountService.auth(this.state.login)
+               .then(res => {
+                   AccountService.saveToken(res.data.accessToken,res.data.tokenType);
+                   ResponseService.connect();
+                   this.props.history.push('/fields');
+               });
+       }
     }
 
     render() {
@@ -45,36 +87,37 @@ class Login extends Component {
                 <p className="account-login__title">Log In</p>
                 <form className="form-group">
                     <div className="account-login__element">
-                        <input className="form-control"
-                               type="email"
-                               placeholder="Email"
-                               value={this.state.email}
-                               name="email"
-                               onChange={this.handleEmailChange}/>
+                        <FormControlInput
+                            placeholder="Email"
+                            type="email"
+                            defaultValue={this.state.login.email}
+                            handleChange={this.handleChange('email')}
+                            error={this.state.emailError}
+                        />
                     </div>
 
                     <div className="account-login__element">
-                        <input className="form-control"
-                               type="password"
-                               placeholder="Password"
-                               value={this.state.password}
-                               name="password"
-                               onChange={this.handlePasswordChange}/>
+                        <FormControlInput
+                            placeholder="Password"
+                            type="password"
+                            defaultValue={this.state.login.password}
+                            handleChange={this.handleChange('password')}
+                            error={this.state.passwordError}
+                        />
                     </div>
 
 
                     <div className="row account-login__element">
                         <div className="col-md-5">
-                            <input className="form-check-input"
-                                   type="checkbox"
-                                   value={this.state.rememberMe}
-                                   name="rememberMe"
-                                   id="rememberMe"
-                                   onClick={this.handleRememberMeChange}/>
-                            <label className="form-check-label" htmlFor="rememberMe">Remember me</label>
+                            <FormControlCheckbox
+                                name="rememberMe"
+                                defaultChecked={false}
+                                handleChange={this.handleRememberMeChange}
+                                label="Remember me"
+                            />
                         </div>
                         <div className="col-md-7 text-right forgot">
-                            <Link to="/account/registration">Forgot your password?</Link>
+                            <Link to="/account/forgot-password">Forgot your password?</Link>
                         </div>
                     </div>
 

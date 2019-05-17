@@ -1,26 +1,27 @@
 import axios from 'axios'
 
 import AccountService from './AccountService';
+import api from './../config/apiConfig';
 
 class FieldService {
 
     getAll() {
         const headers = AccountService.getToken().type + ' ' + AccountService.getToken().token;
-        return axios.get('http://localhost:8080/api/fields', {headers: {
+        return axios.get(api.BASE_URL + api.FIELDS_END_POINT, {headers: {
                 "Authorization": headers
             }});
     }
 
     delete(id) {
         const headers = AccountService.getToken().type + ' ' + AccountService.getToken().token;
-        return axios.delete(`http://localhost:8080/api/fields/${id}`, {headers: {
+        return axios.delete(api.BASE_URL + api.FIELDS_END_POINT + `/${id}`, {headers: {
                 "Authorization": headers
             }});
     }
 
     save(field) {
         const headers = AccountService.getToken().type + ' ' + AccountService.getToken().token;
-        return axios.post('http://localhost:8080/api/fields', field, {
+        return axios.post(api.BASE_URL + api.FIELDS_END_POINT, field, {
             headers: {
                 "Authorization": headers
             }
@@ -29,7 +30,7 @@ class FieldService {
 
     update(field) {
         const headers = AccountService.getToken().type + ' ' + AccountService.getToken().token;
-        return axios.put('http://localhost:8080/api/fields', field, {
+        return axios.put(api.BASE_URL + api.FIELDS_END_POINT, field, {
             headers: {
                 "Authorization": headers
             }

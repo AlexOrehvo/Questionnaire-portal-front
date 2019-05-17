@@ -12,3 +12,14 @@
     justify-content: space-between;
   }
 }
+
+.add-button {
+  padding: 0 20px;
+  text-transform: uppercase;
+
+  .plus {
+    font-weight: 600;
+    font-size: 20px;
+    margin-right: 5px;
+  }
+}
